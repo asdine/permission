@@ -41,7 +41,12 @@ type Permission struct {
 	Sub string
 }
 
-// MarshalText encodes the given text
+// Equal reports whether p and q represents the same permission
+func (p *Permission) Equal(q *Permission) bool {
+	return p.Name == q.Name && p.Sub == q.Sub
+}
+
+// MarshalText implements the encoding.TextMarshaler interface
 func (p Permission) MarshalText() (text []byte, err error) {
 	if p.Name == "" {
 		return nil, ErrEmptyName
@@ -54,7 +59,7 @@ func (p Permission) MarshalText() (text []byte, err error) {
 	return []byte(fmt.Sprintf("%s%s%s", p.Name, delimiter, p.Sub)), nil
 }
 
-// UnmarshalText decodes the given text
+// UnmarshalText implements the encoding.TextUnmarshaler interface
 func (p *Permission) UnmarshalText(text []byte) error {
 	if len(text) == 0 {
 		return ErrEmptyInput

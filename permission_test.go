@@ -58,6 +58,16 @@ func TestUnMarshalling(t *testing.T) {
 	err = p.UnmarshalText(text)
 	assert.Error(t, err)
 	assert.Equal(t, ErrBadFormat, err)
+
+	text = []byte("a.b.c")
+	err = p.UnmarshalText(text)
+	assert.Error(t, err)
+	assert.Equal(t, ErrBadFormat, err)
+
+	text = []byte(".")
+	err = p.UnmarshalText(text)
+	assert.Error(t, err)
+	assert.Equal(t, ErrBadFormat, err)
 }
 
 func TestPermToJSON(t *testing.T) {
@@ -146,6 +156,9 @@ func TestNew(t *testing.T) {
 	assert.NotNil(t, p)
 	assert.Equal(t, "a", p.Name)
 	assert.Equal(t, "b", p.Sub)
+	val, err := json.Marshal(p)
+	assert.NoError(t, err)
+	assert.Equal(t, `"a.b"`, string(val))
 
 	Delimiter(":")
 	defer Delimiter(".")
@@ -165,4 +178,29 @@ func TestNew(t *testing.T) {
 	p, err = New("a:")
 	assert.Error(t, err)
 	assert.Nil(t, p)
+}
+
+func TestEqual(t *testing.T) {
+	p, _ := New("a")
+	assert.True(t, p.Equal(p))
+
+	q, _ := New("b")
+	assert.False(t, p.Equal(q))
+
+	q, _ = New("a")
+	assert.True(t, p.Equal(q))
+	assert.True(t, q.Equal(p))
+
+	p, _ = New("a.b")
+	assert.False(t, p.Equal(q))
+
+	q, _ = New("a.b")
+	assert.True(t, p.Equal(q))
+	assert.True(t, q.Equal(p))
+
+	q, _ = New("a.c")
+	assert.False(t, p.Equal(q))
+
+	r := Permission{Name: "a", Sub: "b"}
+	assert.True(t, p.Equal(&r))
 }

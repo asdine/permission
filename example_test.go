@@ -59,3 +59,11 @@ func ExampleDelimiter() {
 	fmt.Println(perm)
 	// Output: user:edit
 }
+
+func ExamplePermission_Equal() {
+	p, _ := permission.New("user.edit")
+	q, _ := permission.New("user.edit")
+
+	fmt.Println(p.Equal(q))
+	// Output: true
+}

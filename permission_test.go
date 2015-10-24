@@ -28,7 +28,7 @@ func TestMarshalling(t *testing.T) {
 	assert.Nil(t, output)
 }
 
-func TestUnMarshalling(t *testing.T) {
+func TestUnmarshalling(t *testing.T) {
 	text := []byte("a")
 	p := Permission{}
 

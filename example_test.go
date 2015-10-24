@@ -67,3 +67,15 @@ func ExamplePermission_Equal() {
 	fmt.Println(p.Equal(q))
 	// Output: true
 }
+
+func ExampleScope() {
+	perms := permission.Scope{
+		permission.Permission{Name: "user", Sub: "edit"},
+		permission.Permission{Name: "profile"},
+		permission.Permission{Name: "friends"},
+	}
+
+	text, _ := perms.MarshalText()
+	fmt.Println(string(text))
+	// Output: user.edit,profile,friends
+}

@@ -18,6 +18,16 @@ func Separator(sep string) {
 	separator = sep
 }
 
+// NewScope takes a string representation and returns the corresponding Scope
+func NewScope(repr string) (Scope, error) {
+	s := Scope{}
+	err := s.UnmarshalText([]byte(repr))
+	if err != nil {
+		return nil, err
+	}
+	return s, nil
+}
+
 // Scope is a set of Permissions.
 // It can safely be converted back and forth to json
 type Scope []Permission

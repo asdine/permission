@@ -79,3 +79,19 @@ func ExampleScope() {
 	fmt.Println(string(text))
 	// Output: user.edit,profile,friends
 }
+
+func ExampleNewScope() {
+	perms, _ := permission.NewScope("user.edit,profile,friends")
+
+	fmt.Println(len(perms))
+	fmt.Println(perms[0].Name)
+	fmt.Println(perms[0].Sub)
+	fmt.Println(perms[1].Name)
+	fmt.Println(perms[2].Name)
+	// Output:
+	// 3
+	// user
+	// edit
+	// profile
+	// friends
+}

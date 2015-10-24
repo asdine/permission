@@ -2,7 +2,6 @@ package permission
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -114,35 +113,30 @@ func TestPermToFromJSON(t *testing.T) {
 	assert.Equal(t, s, d)
 }
 
-func Example() {
-	permission := Permission{
-		Name: "user",
-		Sub:  "edit",
-	}
+func TestDelimiter(t *testing.T) {
+	Delimiter(":")
 
-	data, _ := json.Marshal(permission)
-	fmt.Printf("%s\n", data)
+	p := Permission{Name: "a", Sub: "b"}
 
-	p := Permission{}
-	json.Unmarshal(data, &p)
-	fmt.Println(p.Name)
-	fmt.Println(p.Sub)
-	// Output:
-	// "user.edit"
-	// user
-	// edit
-}
+	output, err := p.MarshalText()
+	assert.NoError(t, err)
+	assert.Equal(t, "a:b", string(output))
 
-func ExamplePermission() {
-	// Simple Permission
-	perm := Permission{Name: "read"}
-	fmt.Println(perm)
-	// Output: read
-}
+	text := []byte("a:b")
+	p = Permission{}
 
-func ExamplePermission_subPermission() {
-	// Sub Permission
-	perm := Permission{Name: "user", Sub: "edit"}
-	fmt.Println(perm)
-	// Output: user.edit
+	err = p.UnmarshalText(text)
+	assert.NoError(t, err)
+	assert.Equal(t, "a", p.Name)
+	assert.Equal(t, "b", p.Sub)
+
+	text = []byte("a.b")
+	p = Permission{}
+
+	err = p.UnmarshalText(text)
+	assert.NoError(t, err)
+	assert.Equal(t, "a.b", p.Name)
+	assert.Empty(t, p.Sub)
+
+	Delimiter(".")
 }

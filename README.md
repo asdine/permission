@@ -30,7 +30,7 @@ permission.Delimiter(":")
 p := permission.New("user:edit")
 ```
 
-The variable return by `permission.New` is a Permission primitive than can be easily manipulated and marshalled.
+The variable returned by `permission.New` is a Permission primitive than can be easily manipulated and marshalled.
 
 ```go
 p := permission.New("user.edit")
@@ -74,4 +74,64 @@ fmt.Println(a.Permission.Sub)
 output, _ := json.Marshal(a)
 fmt.Println(output)
 // {"Name":"Edit User","Permission":"user.edit"}
+```
+
+## Scope
+
+A Scope is a set of permissions. It can be used to describe multiple permissions.
+
+```go
+s := permission.NewScope("read,write,edit,user:email")
+```
+
+The `,` separator can be changed by setting the global package separator
+
+```go
+permission.Separator(" ")
+
+s := permission.NewScope("read write edit user:email")
+```
+
+The variable returned by `permission.NewScope` is a Scope primitive helper to manipulate sets of Permissions.
+
+```go
+s := permission.NewScope("read,write,user:email")
+
+fmt.Println(len(s))
+// 3
+
+fmt.Println(s[0].Name)
+// read
+
+fmt.Println(s[2].Sub)
+// email
+
+fmt.Println(s)
+// read,write,edit,user:email
+```
+
+JSON example
+```go
+type Role struct {
+  Name        string
+  Permissions permission.Scope
+}
+
+r := Role{}
+
+input := []byte(`{"Name":"Admin","Permission":"read,write,user:email"}`)
+json.Unmarshal(input, &r)
+
+fmt.Println(len(r.Permissions))
+// 3
+
+fmt.Println(r.Permissions[0].Name)
+// read
+
+fmt.Println(a.Permissions[2].Sub)
+// edit
+
+output, _ := json.Marshal(r)
+fmt.Println(output)
+// {"Name":"Admin","Permission":"read,write,user:email"}
 ```

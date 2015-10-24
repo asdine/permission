@@ -37,11 +37,25 @@ func ExamplePermission_subPermission() {
 	// Sub Permission
 	perm := permission.Permission{Name: "user", Sub: "edit"}
 	fmt.Println(perm)
+	// Output: user.edit
+}
 
-	permission.Delimiter(":")
-	perm = permission.Permission{Name: "user", Sub: "edit"}
+func ExampleNew() {
+	perm, _ := permission.New("user.edit")
+
+	fmt.Println(perm.Name)
+	fmt.Println(perm.Sub)
 	fmt.Println(perm)
 	// Output:
+	// user
+	// edit
 	// user.edit
-	// user:edit
+}
+
+func ExampleDelimiter() {
+	permission.Delimiter(":")
+	defer permission.Delimiter(".")
+	perm := permission.Permission{Name: "user", Sub: "edit"}
+	fmt.Println(perm)
+	// Output: user:edit
 }

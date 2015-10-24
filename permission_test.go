@@ -115,6 +115,7 @@ func TestPermToFromJSON(t *testing.T) {
 
 func TestDelimiter(t *testing.T) {
 	Delimiter(":")
+	defer Delimiter(".")
 
 	p := Permission{Name: "a", Sub: "b"}
 
@@ -137,6 +138,31 @@ func TestDelimiter(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, "a.b", p.Name)
 	assert.Empty(t, p.Sub)
+}
 
-	Delimiter(".")
+func TestNew(t *testing.T) {
+	p, err := New("a.b")
+	assert.NoError(t, err)
+	assert.NotNil(t, p)
+	assert.Equal(t, "a", p.Name)
+	assert.Equal(t, "b", p.Sub)
+
+	Delimiter(":")
+	defer Delimiter(".")
+
+	p, err = New("a.b")
+	assert.NoError(t, err)
+	assert.NotNil(t, p)
+	assert.Equal(t, "a.b", p.Name)
+	assert.Empty(t, p.Sub)
+
+	p, err = New("a:b")
+	assert.NoError(t, err)
+	assert.NotNil(t, p)
+	assert.Equal(t, "a", p.Name)
+	assert.Equal(t, "b", p.Sub)
+
+	p, err = New("a:")
+	assert.Error(t, err)
+	assert.Nil(t, p)
 }

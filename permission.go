@@ -19,6 +19,16 @@ func Delimiter(delim string) {
 	delimiter = delim
 }
 
+// New takes a string representation and returns the corresponding Permission
+func New(repr string) (*Permission, error) {
+	p := Permission{}
+	err := p.UnmarshalText([]byte(repr))
+	if err != nil {
+		return nil, err
+	}
+	return &p, nil
+}
+
 // Permission is a simple permission structure.
 // It is meant to describe a single specific permission.
 // A Sub permission can be specified.

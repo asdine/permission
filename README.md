@@ -175,7 +175,7 @@ fmt.Println(def.Allowed(required, p))
 // true
 ```
 
-The given permission can also benefits of the DefaultSubset
+The given permission can also benefit of the DefaultSubset
 
 ```go
 required, _ := permission.Parse("playlist.read")
@@ -194,7 +194,7 @@ MIT
 
 ## Author
 
-**Asdin El Hrychy**
+**Asdine El Hrychy**
 
 - [Twitter](https://twitter.com/asdine_)
 - [Github](https://github.com/asdine)

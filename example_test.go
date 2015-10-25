@@ -41,7 +41,7 @@ func ExamplePermission_subPermission() {
 }
 
 func ExampleNew() {
-	perm, _ := permission.New("user.edit")
+	perm, _ := permission.Parse("user.edit")
 
 	fmt.Println(perm.Name)
 	fmt.Println(perm.Sub)
@@ -61,8 +61,8 @@ func ExampleDelimiter() {
 }
 
 func ExamplePermission_Equal() {
-	p, _ := permission.New("user.edit")
-	q, _ := permission.New("user.edit")
+	p, _ := permission.Parse("user.edit")
+	q, _ := permission.Parse("user.edit")
 
 	fmt.Println(p.Equal(q))
 	// Output: true
@@ -81,7 +81,7 @@ func ExampleScope() {
 }
 
 func ExampleNewScope() {
-	perms, _ := permission.NewScope("user.edit,profile,friends")
+	perms, _ := permission.ParseScope("user.edit,profile,friends")
 
 	fmt.Println(len(perms))
 	fmt.Println(perms[0].Name)

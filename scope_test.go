@@ -98,7 +98,7 @@ func TestSepatator(t *testing.T) {
 }
 
 func TestNewScope(t *testing.T) {
-	s, err := NewScope("a.b")
+	s, err := ParseScope("a.b")
 	assert.NoError(t, err)
 	assert.NotNil(t, s)
 	assert.Len(t, s, 1)
@@ -107,11 +107,11 @@ func TestNewScope(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, `"a.b"`, string(val))
 
-	s, err = NewScope("a.b,c")
+	s, err = ParseScope("a.b,c")
 	assert.NoError(t, err)
 	assert.NotNil(t, s)
 	assert.Len(t, s, 2)
-	assert.True(t, s[1].Equal(&Permission{Name: "c"}))
+	assert.True(t, s[1].Equal(Permission{Name: "c"}))
 	val, err = json.Marshal(s)
 	assert.NoError(t, err)
 	assert.Equal(t, `"a.b,c"`, string(val))
@@ -119,27 +119,27 @@ func TestNewScope(t *testing.T) {
 	Separator(":")
 	defer Separator(",")
 
-	s, err = NewScope("a,b")
+	s, err = ParseScope("a,b")
 	assert.NoError(t, err)
 	assert.NotNil(t, s)
 	assert.Len(t, s, 1)
 	assert.Equal(t, "a,b", s[0].Name)
 
-	s, err = NewScope("a:b")
+	s, err = ParseScope("a:b")
 	assert.NoError(t, err)
 	assert.NotNil(t, s)
 	assert.Len(t, s, 2)
 	assert.Equal(t, "a", s[0].Name)
 	assert.Equal(t, "b", s[1].Name)
 
-	s, err = NewScope("a:")
+	s, err = ParseScope("a:")
 	assert.Error(t, err)
 	assert.Nil(t, s)
 
 	Separator(".")
 	Delimiter(".")
 
-	s, err = NewScope("a,b.c.c.e")
+	s, err = ParseScope("a,b.c.c.e")
 	assert.NoError(t, err)
 	assert.NotNil(t, s)
 	assert.Len(t, s, 4)

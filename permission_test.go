@@ -150,8 +150,8 @@ func TestDelimiter(t *testing.T) {
 	assert.Empty(t, p.Sub)
 }
 
-func TestNew(t *testing.T) {
-	p, err := New("a.b")
+func TestParse(t *testing.T) {
+	p, err := Parse("a.b")
 	assert.NoError(t, err)
 	assert.NotNil(t, p)
 	assert.Equal(t, "a", p.Name)
@@ -163,44 +163,44 @@ func TestNew(t *testing.T) {
 	Delimiter(":")
 	defer Delimiter(".")
 
-	p, err = New("a.b")
+	p, err = Parse("a.b")
 	assert.NoError(t, err)
 	assert.NotNil(t, p)
 	assert.Equal(t, "a.b", p.Name)
 	assert.Empty(t, p.Sub)
 
-	p, err = New("a:b")
+	p, err = Parse("a:b")
 	assert.NoError(t, err)
 	assert.NotNil(t, p)
 	assert.Equal(t, "a", p.Name)
 	assert.Equal(t, "b", p.Sub)
 
-	p, err = New("a:")
+	p, err = Parse("a:")
 	assert.Error(t, err)
-	assert.Nil(t, p)
+	assert.True(t, p.IsZero())
 }
 
 func TestEqual(t *testing.T) {
-	p, _ := New("a")
+	p, _ := Parse("a")
 	assert.True(t, p.Equal(p))
 
-	q, _ := New("b")
+	q, _ := Parse("b")
 	assert.False(t, p.Equal(q))
 
-	q, _ = New("a")
+	q, _ = Parse("a")
 	assert.True(t, p.Equal(q))
 	assert.True(t, q.Equal(p))
 
-	p, _ = New("a.b")
+	p, _ = Parse("a.b")
 	assert.False(t, p.Equal(q))
 
-	q, _ = New("a.b")
+	q, _ = Parse("a.b")
 	assert.True(t, p.Equal(q))
 	assert.True(t, q.Equal(p))
 
-	q, _ = New("a.c")
+	q, _ = Parse("a.c")
 	assert.False(t, p.Equal(q))
 
 	r := Permission{Name: "a", Sub: "b"}
-	assert.True(t, p.Equal(&r))
+	assert.True(t, p.Equal(r))
 }

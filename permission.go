@@ -19,14 +19,14 @@ func Delimiter(delim string) {
 	delimiter = delim
 }
 
-// New takes a string representation and returns the corresponding Permission
-func New(repr string) (*Permission, error) {
+// Parse takes a string representation and returns the corresponding Permission
+func Parse(repr string) (Permission, error) {
 	p := Permission{}
 	err := p.UnmarshalText([]byte(repr))
 	if err != nil {
-		return nil, err
+		return Permission{}, err
 	}
-	return &p, nil
+	return p, nil
 }
 
 // Permission is a simple permission structure.
@@ -42,8 +42,13 @@ type Permission struct {
 }
 
 // Equal reports whether p and q represents the same permission
-func (p *Permission) Equal(q *Permission) bool {
+func (p Permission) Equal(q Permission) bool {
 	return p.Name == q.Name && p.Sub == q.Sub
+}
+
+// IsZero reports wether the permission is a zero value
+func (p Permission) IsZero() bool {
+	return p.Name == "" && p.Sub == ""
 }
 
 // MarshalText implements the encoding.TextMarshaler interface

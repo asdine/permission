@@ -13,13 +13,13 @@ $ go get -u github.com/asdine/permission
 Permission is the primitive that defines a single permission.
 
 ```go
-p := permission.New("read")
+p := permission.Parse("read")
 ```
 
 You can specify a sub Permission by adding a `.`
 
 ```go
-p := permission.New("user.edit")
+p := permission.Parse("user.edit")
 ```
 
 The `.` delimiter can be changed by setting the global package delimiter
@@ -27,14 +27,14 @@ The `.` delimiter can be changed by setting the global package delimiter
 ```go
 permission.Delimiter(":")
 
-p := permission.New("user:edit")
+p := permission.Parse("user:edit")
 ```
 
-The variable returned by `permission.New` is a Permission primitive than can be easily manipulated and marshalled.
+The variable returned by `permission.Parse` is a Permission primitive than can be easily manipulated and marshalled.
 
 ```go
-p := permission.New("user.edit")
-q := permission.New("user.edit")
+p := permission.Parse("user.edit")
+q := permission.Parse("user.edit")
 
 fmt.Println(p.Name)
 // user
@@ -81,7 +81,7 @@ fmt.Println(output)
 A Scope is a set of permissions. It can be used to describe multiple permissions.
 
 ```go
-s := permission.NewScope("read,write,edit,user:email")
+s := permission.ParseScope("read,write,edit,user:email")
 ```
 
 The `,` separator can be changed by setting the global package separator
@@ -89,13 +89,13 @@ The `,` separator can be changed by setting the global package separator
 ```go
 permission.Separator(" ")
 
-s := permission.NewScope("read write edit user:email")
+s := permission.ParseScope("read write edit user:email")
 ```
 
-The variable returned by `permission.NewScope` is a Scope primitive helper to manipulate sets of Permissions.
+The variable returned by `permission.ParseScope` is a Scope primitive helper to manipulate sets of Permissions.
 
 ```go
-s := permission.NewScope("read,write,user:email")
+s := permission.ParseScope("read,write,user:email")
 
 fmt.Println(len(s))
 // 3

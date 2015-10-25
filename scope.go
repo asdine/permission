@@ -18,8 +18,8 @@ func Separator(sep string) {
 	separator = sep
 }
 
-// NewScope takes a string representation and returns the corresponding Scope
-func NewScope(repr string) (Scope, error) {
+// ParseScope takes a string representation and returns the corresponding Scope
+func ParseScope(repr string) (Scope, error) {
 	s := Scope{}
 	err := s.UnmarshalText([]byte(repr))
 	if err != nil {

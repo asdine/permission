@@ -1,5 +1,6 @@
 # Permission
 
+[![Build Status](https://travis-ci.org/asdine/permission.svg)](https://travis-ci.org/asdine/permission)
 [![GoDoc](https://godoc.org/github.com/asdine/permission?status.svg)](https://godoc.org/github.com/asdine/permission)
 
 Permission is a low-level Go package that allows to easily manage permissions.

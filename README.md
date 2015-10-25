@@ -85,7 +85,7 @@ fmt.Println(output)
 A Scope is a set of permissions. It can be used to describe multiple permissions.
 
 ```go
-s, _ := permission.ParseScope("read,write,edit,user:email")
+s, _ := permission.ParseScope("read,write,edit,user.email")
 ```
 
 The `,` separator can be changed by setting the global package separator
@@ -93,13 +93,13 @@ The `,` separator can be changed by setting the global package separator
 ```go
 permission.Separator(" ")
 
-s, _ := permission.ParseScope("read write edit user:email")
+s, _ := permission.ParseScope("read write edit user.email")
 ```
 
 The variable returned by `permission.ParseScope` is a Scope primitive helper to manipulate sets of Permissions.
 
 ```go
-s, _ := permission.ParseScope("read,write,user:email")
+s, _ := permission.ParseScope("read,write,user.email")
 
 fmt.Println(len(s))
 // 3
@@ -111,7 +111,7 @@ fmt.Println(s[2].Sub)
 // email
 
 fmt.Println(s)
-// read,write,edit,user:email
+// read,write,edit,user.email
 ```
 
 JSON example
@@ -123,7 +123,7 @@ type Role struct {
 
 r := Role{}
 
-input := []byte(`{"Name":"Admin","Permission":"read,write,user:email"}`)
+input := []byte(`{"Name":"Admin","Permission":"read,write,user.email"}`)
 json.Unmarshal(input, &r)
 
 fmt.Println(len(r.Permissions))
@@ -137,7 +137,7 @@ fmt.Println(a.Permissions[2].Sub)
 
 output, _ := json.Marshal(r)
 fmt.Println(output)
-// {"Name":"Admin","Permission":"read,write,user:email"}
+// {"Name":"Admin","Permission":"read,write,user.email"}
 ```
 
 ## Definition

@@ -38,7 +38,7 @@ func (def *Definition) Allowed(required, given Permission) bool {
 
 	if given.Sub != "" {
 		if required.Sub == "" {
-			return false
+			return InStringSlice(def.DefaultSubset, given.Sub)
 		}
 		return required.Sub == given.Sub && InStringSlice(def.Subset, given.Sub)
 	}

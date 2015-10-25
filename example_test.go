@@ -20,10 +20,21 @@ func Example() {
 	json.Unmarshal(data, &p)
 	fmt.Println(p.Name)
 	fmt.Println(p.Sub)
+
+	def := permission.Definition{
+		Name:          "user",
+		Subset:        []string{"edit", "profile", "email", "friends", "about"},
+		DefaultSubset: []string{"profile", "about"},
+	}
+
+	required, _ := permission.Parse("user.edit")
+	allowed := def.Allowed(required, p)
+	fmt.Println(allowed)
 	// Output:
 	// "user.edit"
 	// user
 	// edit
+	// true
 }
 
 func ExamplePermission() {
@@ -40,7 +51,7 @@ func ExamplePermission_subPermission() {
 	// Output: user.edit
 }
 
-func ExampleNew() {
+func ExampleParse() {
 	perm, _ := permission.Parse("user.edit")
 
 	fmt.Println(perm.Name)
@@ -80,7 +91,7 @@ func ExampleScope() {
 	// Output: user.edit,profile,friends
 }
 
-func ExampleNewScope() {
+func ExampleParseScope() {
 	perms, _ := permission.ParseScope("user.edit,profile,friends")
 
 	fmt.Println(len(perms))
@@ -94,4 +105,63 @@ func ExampleNewScope() {
 	// edit
 	// profile
 	// friends
+}
+
+func ExampleDefinition() {
+	def := permission.Definition{
+		Name:          "file",
+		Subset:        []string{"read", "write", "execute"},
+		DefaultSubset: []string{"read", "execute"},
+	}
+
+	required, _ := permission.Parse("file.read")
+
+	p, _ := permission.Parse("file.read")
+	fmt.Println(def.Allowed(required, p))
+
+	p, _ = permission.Parse("file.execute")
+	fmt.Println(def.Allowed(required, p))
+
+	p, _ = permission.Parse("file") // file = file.read,file.execute
+	fmt.Println(def.Allowed(required, p))
+
+	required, _ = permission.Parse("file.write")
+
+	p, _ = permission.Parse("file") // file = file.read,file.execute
+	fmt.Println(def.Allowed(required, p))
+	// Output:
+	// true
+	// false
+	// true
+	// false
+}
+
+func ExampleDefinition_Match() {
+	defs := []permission.Definition{
+		permission.Definition{
+			Name:          "repo",
+			Subset:        []string{"read", "write"},
+			DefaultSubset: []string{"read"},
+		},
+		permission.Definition{
+			Name:          "user",
+			Subset:        []string{"profile", "edit", "friends", "email"},
+			DefaultSubset: []string{"profile", "friends"},
+		},
+		permission.Definition{
+			Name:          "playlist",
+			Subset:        []string{"edit", "share", "read"},
+			DefaultSubset: []string{"read", "share"},
+		},
+	}
+
+	p, _ := permission.Parse("user.edit")
+
+	for _, def := range defs {
+		if def.Match(p) {
+			fmt.Println(def.Name)
+		}
+	}
+	// Output:
+	// user
 }

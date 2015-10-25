@@ -70,7 +70,7 @@ func TestAllowedSimple(t *testing.T) {
 	assert.True(t, d.Allowed(required, p))
 
 	p = Permission{Name: "a", Sub: "i"}
-	assert.False(t, d.Allowed(required, p))
+	assert.True(t, d.Allowed(required, p))
 
 	required = Permission{Name: ""}
 	p = Permission{Name: "a"}

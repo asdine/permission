@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/asdine/permission.svg)](https://travis-ci.org/asdine/permission)
 [![GoDoc](https://godoc.org/github.com/asdine/permission?status.svg)](https://godoc.org/github.com/asdine/permission)
+![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
 Permission is a low-level Go package that allows to easily manage permissions.
 
@@ -138,3 +139,62 @@ output, _ := json.Marshal(r)
 fmt.Println(output)
 // {"Name":"Admin","Permission":"read,write,user:email"}
 ```
+
+## Definition
+
+Definition is a way of defining permission attributes and rules.
+
+```go
+def := permission.Definition{
+	Name:          "playlist",
+	Subset:        []string{"edit", "share", "read"},
+	DefaultSubset: []string{"read", "share"},
+}
+```
+
+Once a definition is created you can test permissions against it to see if they match
+
+```go
+p, _ := permission.Parse("playlist.edit")
+
+fmt.Println(def.Match(p))
+// true
+```
+
+You can also compare two permissions and test them against the definition.
+It is useful when you have a permission that has default sub permissions.
+
+```go
+required, _ := permission.Parse("playlist")
+// required gets granted the DefaultSubset list of permissions.
+// It is equivalent to playlist.read and playlist.share
+
+p, _ := permission.Parse("playlist.share")
+
+fmt.Println(def.Allowed(required, p))
+// true
+```
+
+The given permission can also benefits of the DefaultSubset
+
+```go
+required, _ := permission.Parse("playlist.read")
+
+p, _ := permission.Parse("playlist")
+// required gets granted the DefaultSubset list of permissions.
+// It is equivalent to playlist.read and playlist.share
+
+fmt.Println(def.Allowed(required, p))
+// true
+```
+
+## License
+
+MIT
+
+## Author
+
+**Asdin El Hrychy**
+
+- [Twitter](https://twitter.com/asdine_)
+- [Github](https://github.com/asdine)

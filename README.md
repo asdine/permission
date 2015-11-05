@@ -16,28 +16,39 @@ $ go get -u github.com/asdine/permission
 
 ```go
 // Define the permissions
-def := permission.Definition{
-	Name:          "user",
-	Subset:        []string{"edit", "profile", "email", "friends", "about"},
-	DefaultSubset: []string{"profile", "about"},
+def := permission.Definitions{
+	{
+		Name:          "user",
+		Subset:        []string{"edit", "profile", "email", "friends", "about"},
+		DefaultSubset: []string{"profile", "about"},
+	},
+	{
+		Name:          "playlist",
+		Subset:        []string{"edit", "share", "read"},
+		DefaultSubset: []string{"read", "share"},
+	}
 }
 
+// Require specific permissions and test it against a scope
+def.Require("user.edit", "user.profile,user.about,user.email")
+// -> false
+
+
 // User permissions
-p, _ := permission.Parse("user:edit")
+p, _ := permission.Parse("user.edit")
 
 q, _ := permission.Parse("user")
 // q has user:profile and user:about
-
 
 // Required permission
 required := permission.Permission{Name: "user", Sub: "edit"}
 
 // Compare
-allowed := def.Allowed(required, p)
+allowed := def[0].Allowed(required, p)
 fmt.Println(allowed)
 // -> true
 
-allowed = def.Allowed(required, q)
+allowed = def[0].Allowed(required, q)
 fmt.Println(allowed)
 // -> false
 ```

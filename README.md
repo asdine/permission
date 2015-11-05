@@ -12,6 +12,36 @@ Permission is a low-level Go package that allows to easily manage permissions.
 $ go get -u github.com/asdine/permission
 ```
 
+## Usage
+
+```go
+// Define the permissions
+def := permission.Definition{
+	Name:          "user",
+	Subset:        []string{"edit", "profile", "email", "friends", "about"},
+	DefaultSubset: []string{"profile", "about"},
+}
+
+// User permissions
+p, _ := permission.Parse("user:edit")
+
+q, _ := permission.Parse("user")
+// q has user:profile and user:about
+
+
+// Required permission
+required := permission.Permission{Name: "user:edit"}
+
+// Compare
+allowed := def.Allowed(required, p)
+fmt.Println(allowed)
+// -> true
+
+allowed = def.Allowed(required, q)
+fmt.Println(allowed)
+// -> false
+```
+
 ## Permission
 
 Permission is the primitive that defines a single permission.

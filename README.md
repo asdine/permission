@@ -30,7 +30,7 @@ q, _ := permission.Parse("user")
 
 
 // Required permission
-required := permission.Permission{Name: "user:edit"}
+required := permission.Permission{Name: "user", Sub: "edit"}
 
 // Compare
 allowed := def.Allowed(required, p)

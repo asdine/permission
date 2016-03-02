@@ -67,3 +67,24 @@ func (s *Scope) UnmarshalText(text []byte) error {
 	}
 	return nil
 }
+
+// HasPermission checks if the scope has the given permission
+func (s *Scope) HasPermission(p Permission) bool {
+	for _, perm := range *s {
+		if perm.Equal(p) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// Has checks if the scope has the given permission
+func (s *Scope) Has(repr string) bool {
+	p, err := Parse(repr)
+	if err != nil {
+		return false
+	}
+
+	return s.HasPermission(p)
+}

@@ -148,3 +148,31 @@ func TestNewScope(t *testing.T) {
 	assert.Equal(t, "c", s[2].Name)
 	assert.Equal(t, "e", s[3].Name)
 }
+
+func TestScopeHasPermission(t *testing.T) {
+	s := Scope{
+		Permission{Name: "a"},
+		Permission{Name: "b", Sub: "i"},
+	}
+
+	assert.True(t, s.HasPermission(Permission{Name: "a"}))
+	assert.False(t, s.HasPermission(Permission{Name: "b"}))
+	assert.False(t, s.HasPermission(Permission{Name: "a", Sub: "i"}))
+	assert.True(t, s.HasPermission(Permission{Name: "b", Sub: "i"}))
+	assert.False(t, s.HasPermission(Permission{Name: "c"}))
+	assert.False(t, s.HasPermission(Permission{Name: "c", Sub: "i"}))
+}
+
+func TestScopeHas(t *testing.T) {
+	s := Scope{
+		Permission{Name: "a"},
+		Permission{Name: "b", Sub: "i"},
+	}
+
+	assert.True(t, s.Has("a"))
+	assert.False(t, s.Has("b"))
+	assert.False(t, s.Has("a.i"))
+	assert.True(t, s.Has("b.i"))
+	assert.False(t, s.Has("c"))
+	assert.False(t, s.Has("c.i"))
+}
